@@ -6,13 +6,15 @@ let chai = require('chai');
 let chaiHttp = require('chai-http');
 let server = require('../index.js');
 let should = chai.should();
+var mongoose = require("mongoose"),
+User = require('../app/models/users');
 
 chai.use(chaiHttp);
 
 describe('Test', function() {
     it('/GET index.html');
     it('/GET 404');
-    it('/GET users');
+ 
     
   });
   
@@ -34,7 +36,7 @@ it('it should return 404', (done) => {
                   });
           });
           
-          describe('/GET users', () => {
+ describe('/GET users', () => {
 
 it('it should GET all the users', (done) => {
                   chai.request(server)
@@ -52,3 +54,30 @@ it('it should GET all the users', (done) => {
                       });
               });
           });
+
+          describe('User', () => {
+            beforeEach((done) => { 
+                User.remove({}, (err) => {
+                    done();
+                });
+            });
+            it('it should POST a user', (done) => {
+                var user = {
+                    "firstName": "Jane",
+                    "lastName": "Doe",
+                    "email": "woo@hoo.com",
+                    "password": "pass"
+                }
+                chai.request(server)
+                    .post('/api/users')
+                    .send(user)
+                    .end((err, res) => {
+                        res.should.have.status(201);
+                        res.body.should.have.property('firstName');
+                        res.body.firstName.should.be.a('string');
+                        res.body.firstName.should.equal('Jane');
+                        done();
+                    });
+            });
+        
+        });

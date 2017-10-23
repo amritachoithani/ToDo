@@ -2,8 +2,8 @@
     
     'use strict'
     var express = require('express'),
-      router = express.Router(),
-      logger = require('../../config/logger');
+      router = express.Router(),
+      logger = require('../../config/logger');
     
     var mongoose = require('mongoose')
     Todo = mongoose.model('Todo')
@@ -28,17 +28,17 @@ router.get('/user', function(req, res, next){
               return next(err);
             });
         })
-            User.findById(req.params.userId)
-                    .then(user => {
-                        if(user){
-                            res.status(200).json(user);
-                        } else {
-                            res.status(404).json({message: "No user found"});
-                        }
-                    })
-                    .catch(error => {
-                        return next(error);
-                    });
+            User.findById(req.params.userId)
+                    .then(user => {
+                        if(user){
+                            res.status(200).json(user);
+                        } else {
+                            res.status(404).json({message: "No user found"});
+                        }
+                    })
+                    .catch(error => {
+                        return next(error);
+                    });
         
         };
     
@@ -54,40 +54,34 @@ router.post('/users', function (req, res, next) {
             });
           })
       
-router.post('/users', function(req, res, next){
-            logger.log('Create User',  'verbose');
-            res.status(201).json({message: 'User Create'}); 
-        });
         
 router.put('/users/:userId', function(req, res, next){
             logger.log('Update user', + req.params.userId,  'verbose');
         
-                User.findOneAndUpdate({_id: req.params.userId}, 		req.body, {new:true, multi:false})
-                    .then(user => {
-                        res.status(200).json(user);
-                    })
-                    .catch(error => {
-                        return next(error);
-                    });
+                User.findOneAndUpdate({_id: req.params.userId}, 		req.body, {new:true, multi:false})
+                    .then(user => {
+                        res.status(200).json(user);
+                    })
+                    .catch(error => {
+                        return next(error);
+                    });
              
         });
     
         router.delete('/users/:userId', function(req, res, next){
             logger.log('Delete User ', + req.params.userId,  'verbose');
         
-             User.remove({ _id: req.params.userId })
-                    .then(user => {
-                        res.status(200).json({msg: "User Deleted"});
-                    })
-                    .catch(error => {
-                        return next(error);
-                    });
+             User.remove({ _id: req.params.userId })
+                    .then(user => {
+                        res.status(200).json({msg: "User Deleted"});
+                    })
+                    .catch(error => {
+                        return next(error);
+                    });
             });
             
     
-
         });
   
  
  
-    

@@ -8,6 +8,7 @@ var glob = require('glob');
 
 module.exports = function (app, config) {
 
+ 
   logger.log("Loading Mongoose functionality");
   mongoose.Promise = require('bluebird');
   mongoose.connect(config.db, {useMongoClient: true});
@@ -15,7 +16,6 @@ module.exports = function (app, config) {
   db.on('error', function () {
     throw new Error('unable to connect to database at ' + config.db);
   });
-
 
   if(process.env.NODE_ENV !== 'test') {
     app.use(morgan('dev'));
@@ -36,40 +36,43 @@ module.exports = function (app, config) {
       extended: true
     }));
   
-    var users = [ {name: 'John', email: 'woo@hoo.com'},
-    {name: 'Betty', email: 'loo@woo.com'},
-    {name: 'Hal', email: 'boo@woo.com'}
-  ];
 
-  app.get('/api/users', function (req, res) {
-    res.status(200).json(users);
+  var models = glob.sync(config.root + '/app/models/*.js');
+  models.forEach(function (model) {
+    require(model);
+  });
+  
+  var controllers = glob.sync(config.root + '/app/controllers/*.js');
+  controllers.forEach(function (controller) {
+    require(controller);
   });
 
-  function One(req, res, next){
-    res.set('X-One', 'One');
-    next();
-  }
+  var users = [{name: 'John', email: 'woo@hoo.com'},
+  {name: 'Betty', email: 'loo@woo.com'},
+  {name: 'Hal', email: 'boo@woo.com'}
+];
 
-  function Two(req, res, next){
-    res.set('X-Two', 'Two');
-    next();
-  }
+app.get('/api/users', function (req, res) {
+  res.status(200).json(users);
+});
 
-app.get('/', [One, Two], function(req, res){
+function One(req, res, next) {
+  res.set('X-One', 'One');
+  next();
+}
+
+function Two(req, res, next) {
+  res.set('X-Two', 'Two');
+  next();
+}
+
+app.get('/', [One, Two], function (req, res) {
   res.send('Three');
 });
 
-var models = glob.sync(config.root + '/app/models/*.js');
-models.forEach(function (model) {
-  require(model);
-});
+require('../app/controllers/users')(app, config);
 
-var controllers = glob.sync(config.root + '/app/controllers/*.js');
-controllers.forEach(function (controller) {
-  require(controller);
-});
-
-  app.use(express.static(config.root + '/public'));
+app.use(express.static(config.root + '/public'));
   
     app.use(function (req, res) {
       res.type('text/plan');
@@ -87,4 +90,3 @@ controllers.forEach(function (controller) {
     logger.log("Starting application");
   
   };
-  

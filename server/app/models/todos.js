@@ -12,4 +12,4 @@ var TodoSchema = new Schema({
     
 });
 
-module.exports = Mongoose.model('MyTodoModel', TodoSchema);
+module.exports = Mongoose.model('Todo', TodoSchema);

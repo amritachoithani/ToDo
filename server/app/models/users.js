@@ -10,4 +10,4 @@ var UserSchema = new Schema({
     status: { type: Boolean, default: true}
 });
 
-module.exports = Mongoose.model('MyModel', UserSchema);
+module.exports = Mongoose.model('User', UserSchema);
