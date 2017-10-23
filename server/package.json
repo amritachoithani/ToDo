@@ -9,14 +9,17 @@
   "author": "Amrita Choithani",
   "license": "ISC",
   "dependencies": {
+    "bluebird": "^3.5.1",
     "body-parser": "^1.18.2",
     "chai": "^4.1.2",
     "chai-http": "^3.0.0",
     "express": "^4.16.0",
+    "glob": "^7.1.2",
     "grunt-contrib-jshint": "^1.1.0",
     "grunt-contrib-nodemon": "^0.5.4",
     "grunt-env": "^0.4.4",
     "jshint-stylish": "^2.2.1",
+    "mongoose": "^4.12.4",
     "morgan": "^1.9.0",
     "winston": "^2.4.0",
     "winston-daily-rotate-file": "^1.7.2"
