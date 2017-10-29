@@ -10,4 +10,4 @@ var UserSchema = new Schema({
     status: { type: Boolean, default: true}
 });
 
-module.exports = mongoose.model('testing', MySchema);
+module.exports = mongoose.model('test', UserSchema);
