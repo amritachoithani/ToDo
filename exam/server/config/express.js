@@ -1,3 +1,4 @@
+//These are the variables required for the express file
 var express = require('express');
 var router = express.Router();
 var bodyParser = require('body-parser');
@@ -8,7 +9,7 @@ var glob = require('glob');
 
 module.exports = function (app, config) {
  
-
+//This statement loads the mongoose
 console.log("Loading Mongoose functionality");
 mongoose.Promise = require('bluebird');
 mongoose.connect(config.db, {useMongoClient: true});
@@ -26,12 +27,13 @@ app.use(function (req, res, next) {
     next();
   });
 
-
+//This tells the application to use the body parser
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
     extended: true
   }));
 
+//This uses the glob function  
 var models = glob.sync(config.root + '/app/models/*.js');
 models.forEach(function (model) {
   require(model);
@@ -44,6 +46,7 @@ controllers.forEach(function (controller) {
 
 require('../app/controllers/test')(app, config);
 
+//This shows the function for the 404 error handler
 app.use(function (req, res, next) {
 console.log('Request from ' + req.connection.remoteAddress);
 next();
@@ -54,6 +57,8 @@ res.type('text/plan');
 res.status(404);
 res.send('404 Not Found');
 });
+
+//This shows the function for the 500 error handler
 app.use(function (err, req, res, next) {
 console.error(err.stack);
 res.type('text/plan');
