@@ -8,22 +8,23 @@ development: {
             app: {      name: 'ToDo'    },    
             port: 5000,  
             db: 'mongodb://127.0.0.1/todo-dev'
-            
+            secret: "cayennedlikedhistreats"
  },  
 
- test: {    
-  root: rootPath,    
-  app: {      name: 'ToDo'    },    
-  port: 4000,
-  db: 'mongodb://127.0.0.1/todo-test'
-  
+            test: {    
+            root: rootPath,    
+            app: {      name: 'ToDo'    },    
+            port: 4000,
+            db: 'mongodb://127.0.0.1/todo-test'
+            secret: "cayennedlikedhistreats"
 }, 
  
- production: {    
-              root: rootPath,    
-              app: {      name: 'ToDo'    },    
-               port: 80,
-               db: 'mongodb://127.0.0.1/todo'
+            production: {    
+            root: rootPath,    
+            app: {      name: 'ToDo'    },    
+            port: 80,
+            db: 'mongodb://127.0.0.1/todo'
+            secret: "cayennedlikedhistreats"  
               }
   };
 
