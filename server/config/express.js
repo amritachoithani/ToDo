@@ -33,12 +33,9 @@ module.exports = function (app, config) {
     });
   }
 
-  app.use(bodyParser.json());
-  app.use(bodyParser.urlencoded({
-      extended: true
-    }));
+  app.use(bodyParser.json({limit: '1000mb'}));
+  app.use(bodyParser.urlencoded({limit: '1000mb', extended: true}));
   
-
   var models = glob.sync(config.root + '/app/models/*.js');
   models.forEach(function (model) {
     require(model);
@@ -49,30 +46,8 @@ module.exports = function (app, config) {
     require(controller);
   });
 
-  var users = [{name: 'John', email: 'woo@hoo.com'},
-  {name: 'Betty', email: 'loo@woo.com'},
-  {name: 'Hal', email: 'boo@woo.com'}
-];
-
-app.get('/api/users', function (req, res) {
-  res.status(200).json(users);
-});
-
-function One(req, res, next) {
-  res.set('X-One', 'One');
-  next();
-}
-
-function Two(req, res, next) {
-  res.set('X-Two', 'Two');
-  next();
-}
-
-app.get('/', [One, Two], function (req, res) {
-  res.send('Three');
-});
-
 require('../app/controllers/users')(app, config);
+require('../app/controllers/todos')(app, config);
 
 app.use(express.static(config.root + '/public'));
   
@@ -83,7 +58,14 @@ app.use(express.static(config.root + '/public'));
     });
   
     app.use(function (err, req, res, next) {
-      console.log(err)
+      console.error(err.stack);
+      res.type('text/plan');
+      res.status(500);
+      res.send('500 Sever Error');
+    });
+  
+    app.use(function (err, req, res, next) {
+      console.log(err);
       if (process.env.NODE_ENV !== 'test') logger.log(err.stack,'error');
       res.type('text/plan');
       if(err.status){

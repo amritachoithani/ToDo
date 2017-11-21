@@ -2,15 +2,50 @@
 var express = require('express'),
 router = express.Router(),
 logger = require('../../config/logger');
-var mongoose = require('mongoose'),
-User = mongoose.model('User');
 passportService = require('../../config/passport')
 passport = require('passport')
+var mongoose = require('mongoose'),
+User = mongoose.model('User');
 
 var requireLogin = passport.authenticate('local', { session: false });
+var requireAuth = passport.authenticate('jwt', { session: false });
 
 module.exports = function (app, config) {
   app.use('/api', router);
+
+  router.route('/users/login').post(requireLogin, login); 
+
+  router.post('/login', requireAuth, function(req, res, next){
+    console.log(req.body);
+    var email = req.body.email;
+    var password = req.body.password;
+
+    var obj = {'email' : email, 'password' : password};
+    res.status(201).json(obj);
+});
+
+router.put('/users/password/:userId', requireAuth, function(req, res, next){
+    logger.log('Update user ' + req.params.userId, 'verbose');
+
+    User.findById(req.params.userId)
+        .exec()
+        .then(function (user) {
+            if (req.body.password !== undefined) {
+                user.password = req.body.password;
+            }
+
+            user.save()
+                .then(function (user) {
+                    res.status(200).json(user);
+                })
+                .catch(function (err) {
+                    return next(err);
+                });
+        })
+        .catch(function (err) {
+            return next(err);
+        });
+});
 
   router.post('/users', function (req, res, next) {
      logger.log('Create User', 'verbose');
@@ -24,7 +59,7 @@ module.exports = function (app, config) {
      })
    });
       
-  router.get('/user', function(req, res, next){
+  router.get('/users', function(req, res, next){
      logger.log('Get all users', 'verbose');
 
       var query = User.find()
@@ -42,7 +77,7 @@ module.exports = function (app, config) {
       });
   })
 
-router.get('/users/:userId', function(req, res, next){
+router.get('/users/:userId', requireAuth, function(req, res, next){
       logger.log('Get user ' + req.params.userId, 'verbose');
               User.findById(req.params.userId)
                   .then(user => {
@@ -57,7 +92,7 @@ router.get('/users/:userId', function(req, res, next){
                   });
           });        
  
-router.put('/users/:userId', function(req, res, next){
+router.put('/users/:userId', requireAuth, function(req, res, next){
       logger.log('Update user', + req.params.userId,  'verbose');
  
           User.findOneAndUpdate({_id: req.params.userId}, req.body, {new:true, multi:false})
@@ -68,31 +103,8 @@ router.put('/users/:userId', function(req, res, next){
                   return next(error);
               });
     }); 
-     
-    router.put('/users/password/:userId', function(req, res, next){
-        logger.log('Update user ' + req.params.userId, 'verbose');
-    
-        User.findById(req.params.userId)
-            .exec()
-            .then(function (user) {
-                if (req.body.password !== undefined) {
-                    user.password = req.body.password;
-                }
-    
-                user.save()
-                    .then(function (user) {
-                        res.status(200).json(user);
-                    })
-                    .catch(function (err) {
-                        return next(err);
-                    });
-            })
-            .catch(function (err) {
-                return next(err);
-            });
-    });
 
-router.delete('/users/:userId', function(req, res, next){
+router.delete('/users/:userId', requireAuth, function(req, res, next){
       logger.log('Delete User ', + req.params.userId,  'verbose');
  
           User.remove({ _id: req.params.userId })
@@ -102,17 +114,7 @@ router.delete('/users/:userId', function(req, res, next){
               .catch(error => {
                   return next(error);
               });
-         
-router.route('/users/login').post(requireLogin, login);
-
-/**router.post('/login', function(req, res, next){
-      console.log(req.body);
-      var email = req.body.email;
-      var password = req.body.password;
-
-      var obj = {'email' : email, 'password' : password};
-      res.status(201).json(obj);
-  });**/
 
 });
-}
+
+};

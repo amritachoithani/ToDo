@@ -21,6 +21,8 @@ export class DataServices {
                 })
                 .withInterceptor({
                 request(request) {
+                      var authHeader = 'Bearer ' + localStorage.getItem('aurelia_token')
+                      request.headers.append('Authorization', authHeader);
                     console.log(`Requesting ${request.method} ${request.url}`);
                     return request;
                 },
@@ -86,5 +88,19 @@ export class DataServices {
 				return error ;
 			});
     }
-    
+
+    uploadFiles(files, url){
+         return this.httpClient
+            .fetch(url, {
+                method: 'post',
+                body: files
+            })
+            .then(response => response.json())
+            .then(object => {
+                return object;
+            })
+            .catch(error => {
+                return error;
+            });
+        }   
 }
