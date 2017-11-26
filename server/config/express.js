@@ -10,7 +10,6 @@ var cors = require('cors');
 module.exports = function (app, config) {
 
   app.use(cors({origin: 'http://localhost:9000'}));
- 
   logger.log("Loading Mongoose functionality");
   mongoose.Promise = require('bluebird');
   mongoose.connect(config.db, {useMongoClient: true});

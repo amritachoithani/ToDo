@@ -12,7 +12,7 @@ export class List {
     this.message = 'List';
     this.auth = auth;
     this.user = JSON.parse(sessionStorage.getItem('user'));
-    this.title = "Amrita Has Things ToDo!"
+    this.title = "Things ToDo!"
     this.editTodoForm = false;
     this.showCompleted = false;
     this.priorities = ['Low', 'Medium', 'High', 'Critical'];
@@ -51,6 +51,19 @@ export class List {
   async activate() {
     await this.todos.getUserTodos(this.user._id);
   }
-
-
+  editTodo(todo) {
+    this.todoObj = todo;
+    this. showList = false;
+  }
+  deleteTodo(todo) {
+    this.todos.deleteTodo(todo._id);
+  }
+  completeTodo(todo) {
+    todo.completed = !todo.completed;
+    this.todoObj = todo;
+    this.saveTodo();
+  }
+  toggleShowCompleted() {
+    this.showCompleted = !this.showCompleted;
+  }
 }

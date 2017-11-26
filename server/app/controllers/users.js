@@ -104,17 +104,17 @@ router.put('/users/:userId', requireAuth, function(req, res, next){
               });
     }); 
 
-router.delete('/users/:userId', requireAuth, function(req, res, next){
-      logger.log('Delete User ', + req.params.userId,  'verbose');
- 
-          User.remove({ _id: req.params.userId })
-              .then(user => {
-                  res.status(200).json({msg: "User Deleted"});
-              })
-              .catch(error => {
-                  return next(error);
-              });
+router.delete('/users/:userId', function(req, res, next){
+        logger.log('Delete User ', + req.params.userId,  'verbose');
+   
+            User.remove({ _id: req.params.userId })
+                .then(user => {
+                    res.status(200).json({msg: "User Deleted"});
+                })
+                .catch(error => {
+                    return next(error);
+                });
+
 
 });
-
 };

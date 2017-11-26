@@ -53,28 +53,26 @@ router.get('/todos/:userId', function(req, res, next){
           });   
              
 
-router.put('/todos/:userId', function(req, res, next){
-      logger.log('Update Todos', + req.params.userId,  'verbose');
- 
-          Todo.findOneAndUpdate({_id: req.params.userId}, req.body, {new:true, multi:false})
-              .then(todo => {
-                  res.status(200).json(todo);
-              })
-              .catch(error => {
-                  return next(error);
-              });
-      }); 
-     
-
-router.delete('/todos/:userId', function(req, res, next){
-      logger.log('Delete User ', + req.params.userId,  'verbose');
- 
-          Todo.remove({ _id: req.params.userId })
-              .then(user => {
-                  res.status(200).json({msg: "Todo Deleted"});
-              })
-              .catch(error => {
-                  return next(error);
-              });
+router.put('/todos/:todoId', function(req, res, next){
+        logger.log('Update Todos', + req.params.todoId,  'verbose');
+                Todo.findOneAndUpdate({_id: req.params.todoId}, req.body, {new:true, multi:false})
+                    .then(todo => {
+                        res.status(200).json(todo);
+                    })
+                    .catch(error => {
+                        return next(error);
+                    });
             }); 
-}
+           
+    
+router.delete('/todos/:todoId', function(req, res, next){
+    logger.log('Delete Todo ', + req.params.todoId,  'verbose');
+         Todo.remove({ _id: req.params.todoId })
+                      .then(todo => {
+                          res.status(200).json({msg: "Todo Deleted"});
+                      })
+                      .catch(error => {
+                          return next(error);
+                      });
+      });
+      }

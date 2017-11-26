@@ -17,7 +17,7 @@ development: {
             port: 4000,
             db: 'mongodb://127.0.0.1/todo-test',
             secret: "cayennedlikedhistreats"
-}, 
+          }, 
  
             production: {    
             root: rootPath,    
@@ -25,7 +25,7 @@ development: {
             port: 80,
             db: 'mongodb://127.0.0.1/todo',
             secret: "cayennedlikedhistreats"  
-              }
+          }
   };
 
 module.exports = config[env];

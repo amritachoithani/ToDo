@@ -46,7 +46,7 @@ it('it should GET all the users', (done) => {
                           res.body.should.be.a('array');
                           res.body.length.should.be.eql(3);
                           res.body[0].should.be.a('object');
-                           res.body[0].should.have.property('name');
+                            res.body[0].should.have.property('name');
                           res.body[0].should.have.property('email');
                           res.body[0].name.should.be.a('string');
                           res.body[0].name.should.equal('John'); 
@@ -55,13 +55,13 @@ it('it should GET all the users', (done) => {
               });
           });
 
-          describe('User', () => {
+    describe('User', () => {
             beforeEach((done) => { 
                 User.remove({}, (err) => {
                     done();
                 });
             });
-            it('it should POST a user', (done) => {
+it('it should POST a user', (done) => {
                 var user = {
                     "firstName": "Jane",
                     "lastName": "Doe",
@@ -79,5 +79,117 @@ it('it should GET all the users', (done) => {
                         done();
                     });
             });
-        
+it('it should not POST a user without email field', (done) => {
+                var user = {
+                    "firstName": "Jane",
+                    "lastName": "Doe",
+                    "password": "pass"
+                }
+                chai.request(server)
+                    .post('/api/users')
+                    .send(user)
+                    .end((err, res) => {
+                        res.should.have.status(500);
+                        done();
+                    });
+            });
+module.exports = function (app, config) {
+app.use(function (err, req, res, next) {
+                if(process.env.NODE_ENV !== 'test') {
+                    console.error(err.stack);
+                }
+                res.type('text/plan');
+                res.status(500);
+                res.send('500 Sever Error');
+            })
+        };
+it('it should GET all the users', (done) => {
+                var user = new User({
+                     "firstName": "Jane",
+                    "lastName": "Doe",
+                    "email": "JaneDoe@hoo.com",
+                    "password": "pass"
+                });
+                user.save((err, user) => {
+                    chai.request(server)
+                        .get('/api/users')
+                        .end((err, res) => {
+                            res.should.have.status(200);
+                            res.body.should.be.a('array');
+                            res.body.length.should.be.eql(3);
+                            done();
+                        });
+                    
+                });
+            });
+
+it('it should GET a user by the given id', (done) => {
+                var user = new User({
+                    "firstName": "Jane",
+                    "lastName": "Doe",
+                    "email": "JaneDoe@hoo.com",
+                    "password": "pass"
+                });
+                
+                user.save((err, user) => {
+                    chai.request(server)
+                    .get('/api/users/' + user._id)
+                    .send(user)
+                    .end((err, res) => {
+                         res.should.have.status(200);
+                        res.body.should.be.a('object');
+                        res.body.should.have.property('firstName');
+                        res.body.should.have.property('lastName');
+                        res.body.should.have.property('email');
+                        res.body.should.have.property('password');
+                        res.body.should.have.property('_id').eql(user._id.toString());
+                        done();
+                        });
+                });
+                
         });
+
+ it('it should UPDATE a user', (done) => {
+                                
+                 var user = new User({
+                    "firstName": "Jane",
+                    "lastName": "Doe",
+                    "email": "yoo@hoo.com",
+                    "password": "pass"
+                });
+                    user.save((err, user) => {
+                    chai.request(server)
+                        .put('/api/users/' + user._id)
+                        .send({
+                           "_id": user._id,
+                           "firstName": "Joey",
+                           "lastName": "Doe",
+                           "email": "yoo@hoo.edu",
+                           "password": "pass"
+                        }).end((err, res) => {
+                    res.should.have.status(200);
+                    res.body.should.be.a('object');
+                    res.body.should.have.property('email').eql('yoo@hoo.edu');
+                    res.body.should.have.property('firstName').eql('Joey');
+                    done();
+                });
+        });
+    });
+
+it('it should DELETE a user given the id', (done) => {
+    var user = new User({
+        "firstName": "Jane",
+        "lastName": "Doe",
+        "email": "five@hoo.com",
+        "password": "pass"
+    });
+    user.save((err, user) => {
+            chai.request(server)
+            .delete('/api/users/' + user.id)
+            .end((err, res) => {
+    res.should.have.status(200);
+      done();
+            });
+      });
+    });
+});
