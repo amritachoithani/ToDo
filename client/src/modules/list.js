@@ -43,7 +43,11 @@ export class List {
       if (response.error) {
 				alert("There was an error creating the ToDo");
       } else {
-				//Could provide feeback									
+        var todoId = response._id;
+        if (this.filesToUpload && this.filesToUpload.length) {
+          await this.todos.uploadFile(this.filesToUpload, this.user._id, todoId);
+          this.filesToUpload = [];
+        }
       }
       this.showList = true;
     }
@@ -65,5 +69,16 @@ export class List {
   }
   toggleShowCompleted() {
     this.showCompleted = !this.showCompleted;
+  }
+  back() {
+    this.showList = true;
+  }
+
+  changeFiles() {
+    this.filesToUpload = new Array();
+    this.filesToUpload.push(this.files[0]);
+  }
+  removeFile(index) {
+    this.filesToUpload.splice(index, 1);
   }
 }

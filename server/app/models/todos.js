@@ -9,7 +9,7 @@ var TodoSchema = new Schema({
     dateCreated: {type: Date, default: Date.now},
     dateDue: {type: Date, default: Date.now},
     completed: { type: Boolean, default: false},
-    file: {fileName: String, originalName: String}
+    file: {filename: String, originalName: String, dateUploaded: Date}
     
 });
 

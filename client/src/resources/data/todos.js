@@ -1,5 +1,6 @@
 import {inject} from 'aurelia-framework';
 import {DataServices} from './data-services';
+
 @inject(DataServices)
 export class ToDos {
   constructor(data) {
@@ -7,7 +8,6 @@ export class ToDos {
     this.TODO_SERVICE = 'todos';
     this.todosArray = [];
   }
-
 
   async save(todo) {
     if (todo) {
@@ -42,5 +42,13 @@ export class ToDos {
     if (!response.error && !response.message) {
       this.todosArray = response;
     }
+  }
+  async uploadFile(files, userId, todoId) {
+    let formData = new FormData();
+    files.forEach((item, index) => {
+      formData.append("file" + index, item);
+    });
+    let response = await this.data.uploadFiles(formData, this.TODO_SERVICE + "/upload/" + userId + "/" + todoId);
+    return response;
   }
 }
