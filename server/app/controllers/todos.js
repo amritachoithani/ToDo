@@ -54,6 +54,21 @@ module.exports = function (app, config) {
                 });
         });       
 
+router.get('/todos/:userId', function(req, res, next){
+    logger.log('Get todo ' + req.params.userId, 'verbose');
+        Todo.find({userId: req.params.userId})
+          .then(todo => {
+            if(todo){
+                res.status(200).json(todo);
+            } else {
+                res.status(404).json({message: "No todo found"});
+            }
+            })
+            .catch(error => {
+            return next(error);
+            });
+});  
+
 router.put('/todos/:todoId', function(req, res, next){
       logger.log('Update Todos', + req.params.todoId,  'verbose');
  
