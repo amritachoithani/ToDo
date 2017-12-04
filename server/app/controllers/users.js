@@ -24,29 +24,6 @@ module.exports = function (app, config) {
     res.status(201).json(obj);
 });
 
-router.put('/users/password/:userId', requireAuth, function(req, res, next){
-    logger.log('Update user ' + req.params.userId, 'verbose');
-
-    User.findById(req.params.userId)
-        .exec()
-        .then(function (user) {
-            if (req.body.password !== undefined) {
-                user.password = req.body.password;
-            }
-
-            user.save()
-                .then(function (user) {
-                    res.status(200).json(user);
-                })
-                .catch(function (err) {
-                    return next(err);
-                });
-        })
-        .catch(function (err) {
-            return next(err);
-        });
-});
-
   router.post('/users', function (req, res, next) {
      logger.log('Create User', 'verbose');
     var user = new User(req.body);
@@ -91,7 +68,30 @@ router.get('/users/:userId', requireAuth, function(req, res, next){
                       return next(error);
                   });
           });        
- 
+
+router.put('/users/password/:userId', requireAuth, function(req, res, next){
+   logger.log('Update user ' + req.params.userId, 'verbose');
+        
+     User.findById(req.params.userId)
+          .exec()
+           .then(function (user) {
+                 if (req.body.password !== undefined) {
+                  user.password = req.body.password;
+                    }
+        
+                  user.save()
+                        .then(function (user) {
+                            res.status(200).json(user);
+                        })
+                        .catch(function (err) {
+                            return next(err);
+                        });
+                })
+                .catch(function (err) {
+                    return next(err);
+                });
+        });
+
 router.put('/users/:userId', requireAuth, function(req, res, next){
       logger.log('Update user', + req.params.userId,  'verbose');
  

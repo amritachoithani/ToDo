@@ -20,65 +20,73 @@ export class List {
   }
 
 
-  logout() {
-    sessionStorage.removeItem('user');
-    this.auth.logout();
-    this.router.navigate('home');
-  }
+  async activate(){
+		await this.todos.getUserTodos(this.user._id);
+	}
 
-  createTodo() {
-    this.todoObj = {
-      todo: '',
-      description: '',
-      dateDue: new Date(),
-      userId: this.user._id,
-      priority: this.priorities[0]
-    };
-    this.showList = false;
-  }
-
-  async saveTodo() {
-    if (this.todoObj) {
-      let response = await this.todos.save(this.todoObj);
-      if (response.error) {
-				alert("There was an error creating the ToDo");
-      } else {
-        var todoId = response._id;
-        if (this.filesToUpload && this.filesToUpload.length) {
-          await this.todos.uploadFile(this.filesToUpload, this.user._id, todoId);
-          this.filesToUpload = [];
+        createTodo(){	
+            this.todoObj = {
+                todos: "",
+                description: "",
+                dateDue: new Date(),
+                userId: this.user._id,
+                priority: this.priorities[1]
+            }
+            this.showList = false;		
         }
-      }
-      this.showList = true;
-    }
-  }
-  async activate() {
-    await this.todos.getUserTodos(this.user._id);
-  }
-  editTodo(todo) {
-    this.todoObj = todo;
-    this. showList = false;
-  }
-  deleteTodo(todo) {
-    this.todos.deleteTodo(todo._id);
-  }
-  completeTodo(todo) {
-    todo.completed = !todo.completed;
-    this.todoObj = todo;
-    this.saveTodo();
-  }
-  toggleShowCompleted() {
-    this.showCompleted = !this.showCompleted;
-  }
-  back() {
-    this.showList = true;
-  }
 
-  changeFiles() {
-    this.filesToUpload = new Array();
-    this.filesToUpload.push(this.files[0]);
-  }
-  removeFile(index) {
-    this.filesToUpload.splice(index, 1);
-  }
-}
+        editTodo(todo){
+                    this.todoObj = todo;
+                    this. showList = false;
+                }
+
+           deleteTodo(todo){
+                    this.todos.deleteTodo(todo._id);
+                }
+
+            completeTodo(todo){
+                    todo.completed = !todo.completed;
+                    this.todoObj = todo;
+                    this.saveTodo();
+                }
+
+             toggleShowCompleted(){
+                    this.showCompleted = !this.showCompleted;
+                }
+              
+            changeFiles(){
+                      this.filesToUpload = new Array(); 
+                      this.filesToUpload.push(this.files[0]);
+                    }
+            
+            removeFile(index){
+                        this.filesToUpload.splice(index,1);
+                    }
+                       
+    
+        async saveTodo(){
+            if(this.todoObj){		
+                let response = await this.todos.save(this.todoObj);
+                if(response.error){
+                    alert("There was an error creating the ToDo");
+                } else {
+                      var todoId = response._id;
+                                    if(this.filesToUpload && this.filesToUpload.length){
+                                        await this.todos.uploadFile(this.filesToUpload, this.user._id, todoId);
+                                        this.filesToUpload = [];
+                                    }                     
+                }
+                this.showList = true;
+            }
+        }
+
+        back(){
+            this.showList=true;
+        }
+    
+      logout(){
+         sessionStorage.removeItem('user');
+         this.auth.logout();
+    
+      }
+    }

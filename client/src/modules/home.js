@@ -10,7 +10,7 @@ export class Home {
     this.auth = auth;
     this.loginError = '';
     this.users = users;
-    this.message = 'Home';
+    this.message = 'Your ToDo List';
     this.showLogin = true;
   }
 

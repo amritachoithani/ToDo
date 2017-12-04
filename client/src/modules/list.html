@@ -1,7 +1,13 @@
 <template>
-	<h1>${message}</h1>
+<div class="card text-center">
+	<div class="card-header">
+	To Do List
+	</div>
+	<br>
+	<div class="card-body">
+<br>
 	<compose show.bind="showList" view="./components/todoList.html"></compose>
 	<compose show.bind="!showList" view="./components/todoForm.html"></compose>
-	<button click.trigger="logout()">logout</button>
-	<button click.trigger="createTodo()">Create a Todo</button>
+<br>
+</div>
 </template>

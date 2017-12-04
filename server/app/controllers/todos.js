@@ -9,6 +9,23 @@ mkdirp = require('mkdirp');
 module.exports = function (app, config) {
   app.use('/api', router);
 
+var storage = multer.diskStorage({
+    destination: function (req, file, cb) {      
+          var path = config.uploads + req.params.userId + "/";
+        mkdirp(path, function(err) {
+            if(err){
+                res.status(500).json(err);
+            } else {
+                cb(null, path);
+            }
+        });
+    },
+    filename: function (req, file, cb) {
+        let fileName = file.originalname.split('.');   
+        cb(null, fileName[0] + new Date().getTime() + "." + fileName[fileName.length - 1]);
+    }
+  });
+
   router.post('/todos', function (req, res, next) {
      logger.log('Create Todo', 'verbose');
     var todo = new Todo(req.body);
@@ -94,22 +111,6 @@ router.put('/todos/:todoId', function(req, res, next){
                 });
 });
 
-var storage = multer.diskStorage({
-    destination: function (req, file, cb) {      
-          var path = config.uploads + req.params.userId + "/";
-        mkdirp(path, function(err) {
-            if(err){
-                res.status(500).json(err);
-            } else {
-                cb(null, path);
-            }
-        });
-    },
-    filename: function (req, file, cb) {
-        let fileName = file.originalname.split('.');   
-        cb(null, fileName[0] + new Date().getTime() + "." + fileName[fileName.length - 1]);
-    }
-  });
 
   var upload = multer({ storage: storage });
   router.post('/todos/upload/:userId/:todoId', upload.any(), function(req, res, next){

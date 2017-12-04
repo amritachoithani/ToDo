@@ -1,9 +1,17 @@
 <template>
         <div id="errorMsg" innerhtml.bind="loginError"></div>
-        <label for="email">Email</label>
-        <input value.bind="email" type="email" autofocus class="form-control" id="email" placeholder="Email"></input>
-        <label for="password">Password</label>
-        <input value.bind="password" type="password" class="form-control" id="password" placeholder="Password"></input>
-        <button click.trigger="login()">Login</button>  
-        <span class="registerLink" click.trigger="showRegister()">Register</span>
-</template>
+    <center> 
+     <label for="email">Email</label>
+        <div class="col-lg-4">
+        <input value.bind="email" type="email" autofocus class="form-control" style="width: 27rem;" id="email" placeholder="Email"></input>
+</div>
+    <br>    
+        <label for="password">Password</label>
+        <div class="col-lg-4">
+        <input value.bind="password" type="password" class="form-control" style="width: 27rem;" id="password" placeholder="Password"></input>
+</div>
+</center>  
+    <br>   
+    <button click.trigger="login()">Login</button>  
+    <button click.trigger="showRegister()">Register</button> 
+    </template>

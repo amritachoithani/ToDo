@@ -1,8 +1,20 @@
 <template>
-    First Name: <input value.bind="user.firstName">
-    Last Name: <input value.bind="user.lastName">
-    Email: <input value.bind="user.email">
-    Password: <input value.bind="user.password">
-    <span>${registerError}</span>
-    <button click.trigger="save()">Save</button>
-</template>
+    <center>
+        <br>
+        <br>
+        First Name: <input value.bind="user.firstName" style="width: 20rem;">
+        <br>
+        <br>
+        Last Name: <input value.bind="user.lastName" style="width: 20rem;">
+        <br>
+        <br>
+        Email ID: <input value.bind="user.email" style="width: 20rem;">
+        <br>
+        <br>
+        Password: <input value.bind="user.password" style="width: 20rem;">
+        <br>
+        <br>
+        <span>${registerError}</span>
+        <button click.trigger="save()">Save</button>
+    </center>
+    </template>

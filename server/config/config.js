@@ -17,6 +17,7 @@ development: {
             app: {      name: 'ToDo'    },    
             port: 4000,
             db: 'mongodb://127.0.0.1/todo-test',
+            uploads: rootPath + "/public/uploads/",
             secret: "cayennedlikedhistreats"
           }, 
  
@@ -25,6 +26,7 @@ development: {
             app: {      name: 'ToDo'    },    
             port: 80,
             db: 'mongodb://127.0.0.1/todo',
+            uploads: rootPath + "/public/uploads/",
             secret: "cayennedlikedhistreats"  
           }
   };
